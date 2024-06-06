@@ -174,8 +174,38 @@ def add_dj():
     print(f"{name} added successfully.")
 
 # display dj for search function
-def display_dj():
-    pass
+def display_dj_details(dj):
+    while True:
+        clear()
+        heading(f"{dj.name}:")
+        print("1. View All Details")
+        print("2. View Genres and Subgenres")
+        print("3. View Venues")
+        print("4. View Production Status")
+        print("6. Return to Main Menu")
+        choice = input("Please select an option")
+
+        if choice == "1":
+            clear()
+            heading(f"{dj.name}'s Full Details")
+            print(f"Producer: {'Y' if dj.produces else 'N'}\n")
+
+            print("Genres and Subgenres:")
+            genres = dj.genres
+            for genre in genres:
+                print(f"- {genre.title}")
+                subgenres = session.query(Subgenre).filter_by(genre_id=genre.id).all()
+                for subgenre in subgenres:
+                    print(f"  - {subgenre.subtitle}")
+
+            print("\nVenues:")
+            venues = [venue.venuename for venue in dj.venues]
+            for venue in venues:
+                print(f"- {venue}")
+
+            input("\nPress Enter to return to the previous menu. ")
+            
+
 
 
 # search for a DJ via name function
@@ -186,7 +216,7 @@ def search_dj():
     dj = session.query(Dj).filter(func.lower(Dj.name) == dj_name.lower()).first()
 
     if dj:
-        display_dj(dj)
+        display_dj_details(dj)
     else:
         print(f"No Dj found with the name {dj_name}")
         while True:
