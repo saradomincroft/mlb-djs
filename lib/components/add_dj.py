@@ -6,6 +6,9 @@ from env import session, os
 def add_dj():
     while True:
         name = input("Enter DJ name: ")
+        if not name.strip():
+            print("Name cannot be blank. Please enter a valid name.")
+            continue
         existing_dj = session.query(Dj).filter(func.lower(Dj.name) == name.lower()).first()
         if existing_dj:
             print(f"{existing_dj} already exists in the database.")
@@ -51,8 +54,8 @@ def add_dj():
 
     while True:
         genre_title = input("Enter Genre: ").title()
-        if not genre_title:
-            print("Genre title cannot be empty.")
+        if not genre_title.strip():
+            print("Genre cannot be blank. Please enter a valid genre.")
             continue
         
 
@@ -67,8 +70,8 @@ def add_dj():
 
         while True:
             subgenre_title = input(f"Enter Subgenre of {mapped_genre_title} that {name} plays: ").title()
-            if not subgenre_title:
-                print("Subgenre title cannot be empty.")
+            if not genre_title.strip():
+                print("Subgenre cannot be blank. Please enter a valid subgenre.")
                 continue
             
             mapped_subgenre_title = genre_mapping.get(subgenre_title.lower(), subgenre_title)

@@ -3,23 +3,14 @@ from sqlalchemy.orm import sessionmaker
 from env import session, os
 from colorama import Fore, Style
 from models import Dj, Genre, Subgenre, Venue, DjGenre, DjSubgenre, DjVenue
-from components import add_dj
+from components import add_dj, clear
+from styling import heading
 import time
 
 engine = create_engine("sqlite:///lib/data.db")
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def clear():
-    if os.name == 'posix':
-        os.system('clear')
-    else:
-        os.system('cls')
-
-def heading(text):
-    print("*" * 30)
-    print(text)
-    print("*" * 30)
 
 def display_djs():
     clear()
@@ -87,25 +78,6 @@ def display_dj_details(dj):
 
             input("\nPress Enter to return to the previous menu. ")           
 
-# search for a DJ via name function
-def search_dj():
-    clear()
-    heading("SEARCH FOR A DJ")
-    dj_name = input("Enter DJ name: ")
-    dj = session.query(Dj).filter(func.lower(Dj.name) == dj_name.lower()).first()
-
-    if dj:
-        display_dj_details(dj)
-    else:
-        print(f"No Dj found with the name {dj_name}")
-        while True:
-            choice = input("Do you want to continue searching? Yes/Y or return to main menu No/N: ").lower()
-            if choice in ["yes", "y", "ys"]:
-                break
-            elif choice in ["no", "n"]:
-                return
-            else:
-                print("Invalid input, please enter Yes/Y or No/N")
 
 
 
