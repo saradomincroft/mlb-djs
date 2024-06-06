@@ -1,17 +1,15 @@
 from sqlalchemy import func
 from models import Dj, Genre, Subgenre, Venue
 from env import session, os
+from styling import clear
 
 # Function to add a DJ
 def add_dj():
+    clear()
     while True:
         name = input("Enter DJ name: ")
         if not name.strip():
             print("Name cannot be blank. Please enter a valid name.")
-            continue
-        existing_dj = session.query(Dj).filter(func.lower(Dj.name) == name.lower()).first()
-        if existing_dj:
-            print(f"{existing_dj} already exists in the database.")
             while True:
                 choice = input("Do you want to continue adding a new DJ (Yes/Y or No/N)? ").lower()
                 if choice in ["yes", "ys", "y"]:
@@ -19,10 +17,22 @@ def add_dj():
                 elif choice in ["no", "n"]:
                     return
                 else:
-                    print("Invalid input, please enter Yes/Y or No/N")
+                    print("Invalid input, please enter Yes/Y, or No/N")
         else:
-            break
-    
+            existing_dj = session.query(Dj).filter(func.lower(Dj.name) == name.lower()).first()       
+            if existing_dj:
+                print(f"{existing_dj} already exists in the database.")
+                while True:
+                    choice = input("Do you want to continue adding a new DJ (Yes/Y or No/N)? ").lower()
+                    if choice in ["yes", "ys", "y"]:
+                        break
+                    elif choice in ["no", "n"]:
+                        return
+                    else:
+                        print("Invalid input, please enter Yes/Y or No/N")
+            else:
+                break
+        
     while True:
         produces_input = input(f"Does {name} produce music? Yes/Y or No/N? ").lower()
         if produces_input in ["y", "yes", "ys"]:

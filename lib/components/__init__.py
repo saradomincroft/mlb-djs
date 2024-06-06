@@ -1,2 +1,2 @@
 from .add_dj import add_dj
-from .clear import clear
+from .search_display_dj import search_dj, display_dj_details
