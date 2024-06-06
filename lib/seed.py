@@ -33,7 +33,7 @@ venues_data = [
 
 def create_djs(djs):
     for dj in djs:
-        new_dj = Dj(name=dj["name"], produces=False)  # Assuming 'produces' default is False
+        new_dj = Dj(name=dj["name"], produces=dj["produces"])
         session.add(new_dj)
     session.commit()
 

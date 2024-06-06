@@ -47,7 +47,7 @@ def display_dj_details(dj):
                     print(f" - {subgenre.subtitle}")
             input("\nPress Enter to return to the previous menu. ")      
 
-        if choice == "3":
+        elif choice == "3":
             clear()
             heading(f"Venue's that {dj.name} has played at")
             venues = [venue.venuename for venue in dj.venues]
@@ -56,6 +56,20 @@ def display_dj_details(dj):
 
             input("\nPress Enter to return to the previous menu. ")  
 
+        elif choice == "4":
+            clear()
+            heading(f"{dj.name}'s producer status")
+            print(f"Producer: {'Y' if dj.produces else 'N'}\n")
+            input("\nPress Enter to return to the previous menu. ")
+
+        elif choice == "5":
+            pass
+
+        elif choice == "6":
+            return
+        
+        else:
+            print("Invalid input, please enter an option from the menu.")
 
 
 # search for a DJ via name function
