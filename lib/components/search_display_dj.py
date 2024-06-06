@@ -47,6 +47,15 @@ def display_dj_details(dj):
                     print(f" - {subgenre.subtitle}")
             input("\nPress Enter to return to the previous menu. ")      
 
+        if choice == "3":
+            clear()
+            heading(f"Venue's that {dj.name} has played at")
+            venues = [venue.venuename for venue in dj.venues]
+            for venue in venues:
+                print(f"- {venue}")
+
+            input("\nPress Enter to return to the previous menu. ")  
+
 
 
 # search for a DJ via name function
