@@ -86,36 +86,52 @@ def add_dj():
 
     session.add(new_dj)
 
+    genre_mapping = {
+        "drum n bass": "Drum & Bass",
+        "dnb": "Drum & Bass",
+        "d&b": "Drum & Bass",
+        "drum and bass": "Drum & Bass",
+        "d & b": "Drum & Bass",
+        "d n b": "Drum & Bass"
+    }
+
+    genre_mapping = {
+        "Dubstep": "Dubstep/140",
+        "140": "Dubstep/140",
+    }
+
     while True:
-        genre_title = input("Enter Genre: ")
+        genre_title = input("Enter Genre: ").title()
         if not genre_title:
             print("Genre title cannot be empty.")
             continue
         
-    
-        genre = session.query(Genre).filter_by(title=genre_title).first()
+
+        mapped_genre_title = genre_mapping.get(genre_title.lower(), genre_title)
+        genre = session.query(Genre).filter(func.lower(Genre.title) == mapped_genre_title.lower()).first()
         if genre is None:
-            genre = Genre(title=genre_title)
+            genre = Genre(title=mapped_genre_title)
             session.add(genre)
             session.commit()
         elif genre not in new_dj.genres:
             new_dj.genres.append(genre)
 
         while True:
-            subgenre_title = input(f"Enter Subgenre of {genre_title} that {name} plays: ")
+            subgenre_title = input(f"Enter Subgenre of {mapped_genre_title} that {name} plays: ").title()
             if not subgenre_title:
                 print("Subgenre title cannot be empty.")
                 continue
             
-            subgenre = session.query(Subgenre).filter_by(subtitle=subgenre_title, genre_id=genre.id).first()
+            mapped_subgenre_title = genre_mapping.get(subgenre_title.lower(), subgenre_title)
+            subgenre = session.query(Subgenre).filter(func.lower(Subgenre.subtitle) == mapped_subgenre_title.lower(), Subgenre.genre_id == genre.id).first()
             if subgenre is None:
-                subgenre = Subgenre(subtitle=subgenre_title, genre=genre)
+                subgenre = Subgenre(subtitle=mapped_subgenre_title, genre=genre)
                 session.add(subgenre)
                 session.commit()
             elif subgenre not in genre.subgenres:
                 genre.subgenres.append(subgenre)
 
-            add_another_subgenre = input(f"Do you want to add another subgenre of {genre_title} that {name} plays? (yes/no): ").lower()
+            add_another_subgenre = input(f"Do you want to add another subgenre of {mapped_genre_title} that {name} plays? (yes/no): ").lower()
             if add_another_subgenre in ["yes", "y", "ys"]:
                 continue
             elif add_another_subgenre in ["no", "n"]:
@@ -131,15 +147,19 @@ def add_dj():
         else:
             print("Invalid input, please enter Yes/Y or No/N")
 
-
     while True:
-        venue_name = input("Enter a venue where the DJ has played: ")
+        venue_name = input("Enter a venue where the DJ has played: ").title()
         if not venue_name:
             print("Venue name cannot be empty.")
             continue
         
-        venue = Venue(venuename=venue_name)
-        new_dj.venues.append(venue) 
+        venue = session.query(Venue).filter(func.lower(Venue.venuename) == venue_name.lower()).first()
+        if venue is None:
+            venue = Venue(venuename=venue_name)
+            session.add(venue)
+            session.commit()
+        elif venue not in new_dj.venues:
+            new_dj.venues.append(venue)
 
         add_another_venue = input(f"Do you want to add another venue for {name}? (yes/no): ").lower()
         if add_another_venue in ["yes", "y", "ys"]:
@@ -153,6 +173,30 @@ def add_dj():
     session.commit()
     print(f"{name} added successfully.")
 
+# display dj for search function
+def display_dj():
+    pass
+
+
+# search for a DJ via name function
+def search_dj():
+    clear()
+    heading("SEARCH FOR A DJ")
+    dj_name = input("Enter DJ name: ")
+    dj = session.query(Dj).filter(func.lower(Dj.name) == dj_name.lower()).first()
+
+    if dj:
+        display_dj(dj)
+    else:
+        print(f"No Dj found with the name {dj_name}")
+        while True:
+            choice = input("Do you want to continue searching? Yes/Y or return to main menu No/N: ").lower()
+            if choice in ["yes", "y", "ys"]:
+                break
+            elif choice in ["no", "n"]:
+                return
+            else:
+                print("Invalid input, please enter Yes/Y or No/N")
 
 
 
@@ -164,9 +208,12 @@ def main_menu():
     print("3. Display all Subgenres")
     print("4. Display all Venues")
     print("5. Add a DJ")
+    print("6. Search for a DJ")
+    print("7. Update records")
     print("Exit")
     choice = input("Enter your choice: ")
     return choice
+
 
 def start():
     while True:
@@ -181,6 +228,8 @@ def start():
             display_venues()
         elif choice == '5':
             add_dj()
+        elif choice == '6':
+            search_dj()
         elif choice == "exit":
             break
         else:
