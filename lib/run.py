@@ -5,6 +5,7 @@ from colorama import Fore, Style
 from models import Dj, Genre, Subgenre, Venue, DjGenre, DjSubgenre, DjVenue
 from components import add_dj
 from components.search_display_dj import search_dj
+from components.update import update_dj
 from styling import heading, clear
 import time
 
@@ -54,6 +55,7 @@ def main_menu():
     print("4. Add a DJ")
     print("5. Search for a DJ")
     print("6. Update records")
+    print("7. Delete records")
     print("Exit")
     choice = input("Enter your choice: ")
     return choice
@@ -73,7 +75,7 @@ def start():
         elif choice == '5':
             search_dj()
         elif choice == '6':
-            pass
+            update_dj()
         elif choice == "exit":
             break
         else:
