@@ -54,7 +54,7 @@ def main_menu():
     print("3. Display all Venues")
     print("4. Add a DJ")
     print("5. Search for a DJ")
-    print("6. Update records")
+    print("6. Update DJ Info")
     print("7. Delete records")
     print("Exit")
     choice = input("Enter your choice: ")
