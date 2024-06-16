@@ -14,45 +14,47 @@ def display_dj_details(dj):
         print(f"4. View {dj.name}'s Production Status")
         print(f"5. Update {dj.name}'s details")
         print("6. Return to Main Menu")
-        choice = input("Please select an option")
+        choice = input("Please select an option: ")
 
         if choice == "1":
             clear()
             heading(f"{dj.name}'s Full Details")
-            print(f"Producer: {'Y' if dj.produces else 'N'}\n")
+            print(f"Producer: {'Yes' if dj.produces else 'No'}\n")
 
             print("Genres and Subgenres:")
-            genres = dj.genres
-            for genre in genres:
+            for genre in dj.genres:
                 print(f"- {genre.title}")
-                subgenres = session.query(Subgenre).filter_by(genre_id=genre.id).all()
+                subgenres = session.query(Subgenre).join(DjSubgenre).filter(
+                    DjSubgenre.dj_id == dj.id,
+                    Subgenre.genre_id == genre.id
+                ).all()
                 for subgenre in subgenres:
                     print(f"  - {subgenre.subtitle}")
 
             print("\nVenues:")
-            venues = [venue.venuename for venue in dj.venues]
-            for venue in venues:
-                print(f"- {venue}")
+            for venue in dj.venues:
+                print(f"- {venue.venuename}")
 
             input("\nPress Enter to return to the previous menu. ")  
 
         elif choice == "2":
             clear()
             heading(f"{dj.name}'s Genres and Subgenres")
-            genres = dj.genres
-            for genre in genres:
+            for genre in dj.genres:
                 print(f"- {genre.title}")
-                subgenres = session.query(Subgenre).filter_by(genre_id=genre.id).all()
+                subgenres = session.query(Subgenre).join(DjSubgenre).filter(
+                    DjSubgenre.dj_id == dj.id,
+                    Subgenre.genre_id == genre.id
+                ).all()
                 for subgenre in subgenres:
-                    print(f" - {subgenre.subtitle}")
+                    print(f"  - {subgenre.subtitle}")
             input("\nPress Enter to return to the previous menu. ")      
 
         elif choice == "3":
             clear()
-            heading(f"Venue's that {dj.name} has played at")
-            venues = [venue.venuename for venue in dj.venues]
-            for venue in venues:
-                print(f"- {venue}")
+            heading(f"Venues that {dj.name} has played at")
+            for venue in dj.venues:
+                print(f"- {venue.venuename}")
 
             input("\nPress Enter to return to the previous menu. ")  
 
@@ -71,7 +73,6 @@ def display_dj_details(dj):
         else:
             print("Invalid input, please enter an option from the menu.")
 
-
 # search for a DJ via name function
 def search_dj():
     clear()
@@ -82,11 +83,12 @@ def search_dj():
     if dj:
         display_dj_details(dj)
     else:
-        print(f"No Dj found with the name {dj_name}")
+        print(f"No DJ found with the name {dj_name}")
         while True:
             choice = input("Do you want to continue searching? Yes/Y or return to main menu No/N: ").lower()
             if choice in ["yes", "y", "ys"]:
-                break
+                search_dj()
+                return
             elif choice in ["no", "n"]:
                 return
             else:
