@@ -21,7 +21,14 @@ subgenres_data = [
     {"title": "Dancefloor", "genre": "Drum & Bass"},
     {"title": "Minimal Rollers", "genre": "Drum & Bass"},
     {"title": "Liquid", "genre": "Drum & Bass"},
-    {"title": "Hi-Tech", "genre": "Psytrance"}
+    {"title": "Hi-Tech", "genre": "Psytrance"},
+    {"title": "Melodic Techno", "genre": "Techno"},
+    {"title": "Bassline", "genre": "UKG"},
+    {"title": "Bass House", "genre": "House"},
+    {"title": "G House", "genre": "House"},
+    {"title": "Tech House", "genre": "House"},
+    {"title": "Tearout", "genre": "Dubstep/140"},
+    {"title": "Brostep", "genre": "Dubstep/140"}
 ]
 
 venues_data = [
