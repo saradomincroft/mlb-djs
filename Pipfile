@@ -8,6 +8,7 @@ sqlalchemy = "*"
 alembic = "*"
 colorama = "*"
 keyboard = "*"
+emoji = "*"
 
 [dev-packages]
 

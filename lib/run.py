@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from env import session, os
-from colorama import Fore, Style
+from colorama import Fore, Style, init
 from models import Dj, Genre, Subgenre, Venue
 from components import add_dj
 from components.search_display_dj import search_dj
@@ -51,7 +51,7 @@ def display_venues():
 # Main menu function
 def main_menu():
     clear()
-    print("DJ App Main Menu")
+    heading("DJ DATABASS")
     print("1. Display all DJs")
     print("2. Display all Genres & Subgenres")
     print("3. Display all Venues")
