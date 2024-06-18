@@ -1,11 +1,10 @@
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from env import session, os
-from colorama import Fore, Style, init
+from colorama import Fore, Style
 from models import Dj, Genre, Subgenre, Venue
-from components import add_dj
+from components import add_dj, update_dj
 from components.search_display_dj import search_dj
-from components.update import update_dj
 from styling import heading, clear
 import time
 
@@ -15,6 +14,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # MAIN MENU FUNCTIONS
+
 # Function to display all DJs
 def display_djs():
     clear()
