@@ -1,7 +1,8 @@
 from sqlalchemy import func
 from config import session
+from env import clear
 from models import Dj, Genre, Subgenre, Venue, DjGenre, DjSubgenre
-from styling import heading, subheading, clear, error_message, success_message, check_quit, clear_prev_line
+from styling import subheading, error_message, success_message, check_quit, clear_prev_line
 from colorama import Fore, Style
 
 # Genre mappings
@@ -19,7 +20,7 @@ genre_mapping = {
 def update_dj():
     while True:
         clear()
-        heading("UPDATE DJ")
+        print("UPDATE DJ")
 
         name = input("Enter the name of the DJ to update: ").strip()
         dj = session.query(Dj).filter(func.lower(Dj.name) == name.lower()).first()
@@ -27,7 +28,7 @@ def update_dj():
         if dj:
             while True:
                 clear()
-                heading(f"UPDATE {dj.name} ")
+                print(f"UPDATE {dj.name} ")
                 print("1. Update Name")
                 print("2. Update Production Status")
                 print("3. Update Genres and Subgenres")
@@ -91,18 +92,21 @@ def update_name(dj):
 def update_dj_genres_and_subgenres(dj):
     while True:
         clear()
-        heading(f"Update Genres and Subgenres\n{dj.name}'s current genres and subgenres")
-
-        genres = dj.genres
-        for genre in genres:
+        print(f"Update Genres and Subgenres\n{dj.name}'s current genres and subgenres")      
+        for genre in dj.genres:
             print(f"- {genre.title}")
-            for subgenre in genre.subgenres:
+            subgenres = session.query(Subgenre).join(DjSubgenre).filter(
+                DjSubgenre.dj_id == dj.id,
+                Subgenre.genre_id == genre.id
+            ).all()
+            for subgenre in subgenres:
                 print(f"  - {subgenre.subtitle}")
+
         print("1. Add a new genre")
         print("2. Update existing genres and subgenres")
         print("3. Remove a genre (and its subgenres) from DJ")
         print("4. Return to previous menu")
-        
+                
         choice = input("Select an option: ").strip().lower()
 
         if choice == '1':
@@ -116,11 +120,12 @@ def update_dj_genres_and_subgenres(dj):
         else:
             error_message("Invalid choice, please enter a valid option.")
 
+
 def add_genre_and_subgenre_to_dj(dj):
     while True:
         genre_title = input("Enter Genre: ").strip().title()
         if not genre_title:
-            error_message("Genre cannot be blank. Please enter a valid genre.")
+            error_message("Genre cannot be blank, please enter a valid genre.")
             continue
 
         mapped_genre_title = genre_mapping.get(genre_title.lower(), genre_title)
@@ -169,25 +174,30 @@ def add_subgenre_to_genre(dj, genre):
             break
 
 def update_genre_subgenres(dj):
-    clear()
-    heading("Update Existing Genres and Subgenres")
+    # print("Update Existing Genres and Subgenres")
     
-    genres = dj.genres
-    for genre in genres:
-        print(f"- {genre.title}")
-        for subgenre in genre.subgenres:
-            print(f"  - {subgenre.subtitle}")
-    
+    # genres = dj.genres
+    # for genre in genres:
+    #     print(f"- {genre.title}")
+    #     for subgenre in genre.subgenres:
+    #         print(f"  - {subgenre.subtitle}")
+    clear_prev_line()
     genre_title = input("Enter the genre title to update: ").strip().title()
     genre = session.query(Genre).filter(func.lower(Genre.title) == genre_title.lower()).first()
     
     if genre and genre in dj.genres:
         while True:
             clear()
-            heading(f"Update {genre.title}")
+            print(f"Update {genre.title}")
             print(f"Current subgenres for {genre.title}:")
-            for subgenre in genre.subgenres:
-                print(f"  - {subgenre.subtitle}")
+            for genre in dj.genres:
+                print(f"- {genre.title}")
+                subgenres = session.query(Subgenre).join(DjSubgenre).filter(
+                    DjSubgenre.dj_id == dj.id,
+                    Subgenre.genre_id == genre.id
+                ).all()
+                for subgenre in subgenres:
+                    print(f"  - {subgenre.subtitle}")
 
             print("1. Add Subgenre")
             print("2. Remove Subgenre")
@@ -206,15 +216,20 @@ def update_genre_subgenres(dj):
         error_message(f"{genre_title} is not associated with {dj.name}.")
 
 def remove_subgenre_from_genre(dj, genre):
+    clear_prev_line()
     subgenre_title = input(f"Enter the subgenre of {genre.title} to remove: ").strip().title()
     subgenre = session.query(Subgenre).filter(func.lower(Subgenre.subtitle) == subgenre_title.lower(), Subgenre.genre_id == genre.id).first()
     
-    if subgenre and subgenre in dj.subgenres:
-        dj.subgenres.remove(subgenre)
-        session.commit()
-        print(f"Removed subgenre {subgenre.subtitle} from {genre.title}")
+    if subgenre:
+        if subgenre in dj.subgenres:
+            dj.subgenres.remove(subgenre)
+            session.commit()
+            success_message(f"Removed subgenre {subgenre.subtitle} from {genre.title}")
+        else:
+            error_message(f"{dj.name} does not have the subgenre {subgenre.subtitle} under {genre.title}.")
     else:
         error_message(f"Subgenre {subgenre_title} not found under {genre.title}.")
+
 
 def remove_genre_from_dj(dj):
     genre_title = input("Enter the genre to remove from DJ: ").strip().title()
@@ -226,7 +241,7 @@ def remove_genre_from_dj(dj):
                 dj.subgenres.remove(subgenre)
         dj.genres.remove(genre)
         session.commit()
-        print(f"Removed genre {genre.title} and its subgenres from {dj.name}")
+        success_message(f"Removed genre {genre.title} and its subgenres from {dj.name}")
     else:
         error_message(f"Genre {genre_title} not found for {dj.name}.")
 
@@ -234,16 +249,11 @@ def remove_genre_from_dj(dj):
 def update_dj_venues(dj):
     clear()
     while True:
-        heading(f"UPDATE VENUES FOR {dj.name} ")   
+        print(f"UPDATE VENUES FOR {dj.name} ")   
         
         print("1. Add a new venue")
         print("2. Remove a venue")
         print("3. Return to previous menu")
-
-        subheading(f"\n{dj.name}'s current venues")  
-        venues = dj.venues
-        for venue in venues:
-            print(f"- {venue.venuename}")
         
         choice = input("Select an option: ").strip().lower()
         if choice == '1':
@@ -271,6 +281,15 @@ def add_venue_to_dj(dj):
             return
         elif venue_name.strip() == "":
             error_message("Venue name cannot be blank, please enter a valid venue. ")
+            while True:
+                choice = input("Do you want to continue adding a venue? Yes/Y or return to main menu No/N: ").strip().lower()
+                if choice in ["yes", "y", "ys"]:
+                    clear_prev_line()
+                    break
+                elif choice in ["no", "n"]:
+                    return
+                else:
+                    error_message("Invalid input, please enter Yes/Y or No/N")
             continue
 
         existing_venue = session.query(Venue).filter(func.lower(Venue.venuename) == venue_name.lower()).first()
@@ -305,7 +324,11 @@ def add_venue_to_dj(dj):
 
 # Delete a venue from DJ
 def remove_venue_from_dj(dj):
-    clear
+    clear()
+    subheading(f"\n{dj.name}'s current venues")  
+    venues = dj.venues
+    for venue in venues:
+        print(f"- {venue.venuename}")
     venue_name = input("Enter the venue to remove from DJ: ").strip().title()
     venue = session.query(Venue).filter(func.lower(Venue.venuename) == venue_name.lower()).first()
     while True:

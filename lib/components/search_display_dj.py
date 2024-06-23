@@ -1,13 +1,13 @@
 from sqlalchemy import func
-from env import session, os
+from env import session, clear
 from models import Dj, Genre, Subgenre, Venue, DjGenre, DjSubgenre, DjVenue
-from styling import heading, clear
+from components import update_dj
 
 # display dj for search function
 def display_dj_details(dj):
     while True:
         clear()
-        heading(f"{dj.name}:")
+        print(f"{dj.name}:")
         print(f"1. View all of {dj.name}'s details")
         print(f"2. View genres and subgenres that {dj.name} plays")
         print(f"3. View venues {dj.name} has played at")
@@ -18,7 +18,7 @@ def display_dj_details(dj):
 
         if choice == "1":
             clear()
-            heading(f"{dj.name}'s Full Details")
+            print(f"{dj.name}'s Full Details")
             print(f"Producer: {'Yes' if dj.produces else 'No'}\n")
 
             print("Genres and Subgenres:")
@@ -39,7 +39,7 @@ def display_dj_details(dj):
 
         elif choice == "2":
             clear()
-            heading(f"{dj.name}'s Genres and Subgenres")
+            print(f"{dj.name}'s Genres and Subgenres")
             for genre in dj.genres:
                 print(f"- {genre.title}")
                 subgenres = session.query(Subgenre).join(DjSubgenre).filter(
@@ -52,7 +52,7 @@ def display_dj_details(dj):
 
         elif choice == "3":
             clear()
-            heading(f"Venues that {dj.name} has played at")
+            print(f"Venues that {dj.name} has played at")
             for venue in dj.venues:
                 print(f"- {venue.venuename}")
 
@@ -60,12 +60,12 @@ def display_dj_details(dj):
 
         elif choice == "4":
             clear()
-            heading(f"{dj.name}'s producer status")
+            print(f"{dj.name}'s producer status")
             print(f"Producer: {'Y' if dj.produces else 'N'}\n")
             input("\nPress Enter to return to the previous menu. ")
 
         elif choice == "5":
-            pass
+            update_dj()
 
         elif choice == "6":
             return
@@ -76,7 +76,7 @@ def display_dj_details(dj):
 # search for a DJ via name function
 def search_dj():
     clear()
-    heading("SEARCH FOR A DJ")
+    print("SEARCH FOR A DJ")
     dj_name = input("Enter DJ name: ")
     dj = session.query(Dj).filter(func.lower(Dj.name) == dj_name.lower()).first()
 

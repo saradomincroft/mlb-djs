@@ -2,18 +2,11 @@ import os, sys, time
 from colorama import Fore, Style, Back
 # import emoji
 
-def clear():
-    if os.name == 'posix':
-        os.system('clear')
-    else:
-        os.system('cls')
-        
 def heading(text):
     BOLD = Style.BRIGHT
     BLUE = Fore.BLUE
     WHITE_BG = Back.WHITE
     RESET_COLOR = Style.RESET_ALL
-
     print(f"{BOLD}{BLUE}{WHITE_BG}🎧🔊{text}🔊🎧{RESET_COLOR}")
 
 def subheading(text):

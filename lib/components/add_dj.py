@@ -1,12 +1,13 @@
 from sqlalchemy import func
 from models import Dj, Genre, Subgenre, Venue
-from env import session, os
-from styling import heading, error_message, success_message, clear_prev_line, subheading, check_quit
+from env import session, clear
+from styling import error_message, success_message, clear_prev_line, subheading, check_quit
 import time
 
 # FUNCTION TO ADD DJ INTO THE DB
 def add_dj():
-    heading("ADD NEW DJ")
+    clear()
+    print("ADD NEW DJ")
     subheading("To return to the main menu, type 'quit' and press enter at any time. ")
 
     # Add DJ by DJ name, error message displays if blank or if DJ already exists in db.
