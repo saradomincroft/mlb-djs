@@ -15,6 +15,12 @@ def subheading(text):
     RESET_COLOR = Style.RESET_ALL
     print(f"{BOLD}{CYAN}{text}{RESET_COLOR}\n")
 
+def subheading_two(text):
+    BOLD = Style.BRIGHT
+    YELLOW = Fore.YELLOW
+    RESET_COLOR = Style.RESET_ALL
+    print(f"{BOLD}{YELLOW}{text}{RESET_COLOR}")
+
 def error_message(msg):
     print(f"{Fore.RED}{msg}{Fore.RESET}")
     time.sleep(1)

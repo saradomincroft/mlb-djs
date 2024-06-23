@@ -9,6 +9,7 @@ alembic = "*"
 colorama = "*"
 keyboard = "*"
 emoji = "*"
+fire = "*"
 
 [dev-packages]
 
