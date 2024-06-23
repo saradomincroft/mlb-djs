@@ -40,8 +40,8 @@ def start():
         print(f"{Fore.MAGENTA}1. Display DJs{Style.RESET_ALL}")
         print(f"{Fore.MAGENTA}2. Display Genres & Subgenres{Style.RESET_ALL}")
         print(f"{Fore.MAGENTA}3. Display Venues{Style.RESET_ALL}")
-        print(f"{Fore.MAGENTA}4. Add DJ{Style.RESET_ALL}")
-        print(f"{Fore.MAGENTA}5. Search DJ{Style.RESET_ALL}")
+        print(f"{Fore.MAGENTA}4. Display DJ{Style.RESET_ALL}")
+        print(f"{Fore.MAGENTA}5. Add DJ{Style.RESET_ALL}")
         print(f"{Fore.MAGENTA}6. Update DJ{Style.RESET_ALL}")
         print(f"{Fore.MAGENTA}7. Delete DJ{Style.RESET_ALL}")
         print(f"{Fore.RED}8. Exit{Style.RESET_ALL}")
@@ -53,9 +53,9 @@ def start():
         elif choice == '3':
             display_venues()
         elif choice == '4':
-            add_dj()
-        elif choice == '5':
             search_dj()
+        elif choice == '5':
+            add_dj()
         elif choice == '6':
             update_dj()
         elif choice == '7':
